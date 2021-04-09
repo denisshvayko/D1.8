@@ -1,0 +1,6 @@
+README.md
+setup.py
+trello_client_basics_api_denisshvayko.egg-info/PKG-INFO
+trello_client_basics_api_denisshvayko.egg-info/SOURCES.txt
+trello_client_basics_api_denisshvayko.egg-info/dependency_links.txt
+trello_client_basics_api_denisshvayko.egg-info/top_level.txt
