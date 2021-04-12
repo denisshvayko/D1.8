@@ -29,7 +29,7 @@ def read():
             print('\t' + 'Нет задач!')
             continue
         for task in task_data:
-            print('\t' + task['name'])
+            print('\t' + "Название задачи: " + task['name'] + "--  ID задачи: " + task['id'] )
 
 
 def create_task(name, column_name):
@@ -45,14 +45,17 @@ def create_task(name, column_name):
         if column_name_from_API == column_name:
             # Создадим задачу с именем _name_ в найденной колонке
             requests.post(base_url.format('cards'), data={'name': name, 'idList': column['id'], **auth_params})
-            task_data = requests.get(base_url.format('lists') + '/' + column['id'] + '/cards', params=auth_params).json()
-            auth_params['name'] = column_name_from_API + ': ' + str(len(task_data)) + ' tasks'
-            requests.put('https://api.trello.com/1/lists/{}'.format(column['id']), params = auth_params)
+            ## Потом доделаю эту штуку =с
+            # task_data = requests.get(base_url.format('lists') + '/' + column['id'] + '/cards', params=auth_params).json()
+            # auth_params['name'] = column_name_from_API + ': ' + str(len(task_data)) + ' tasks'
+            # requests.put('https://api.trello.com/1/lists/{}'.format(column['id']), params = auth_params)
             break
 
 def create_column(name):
     url = "https://api.trello.com/1/boards/{}/lists".format(board_id)
-    auth_params['name'] = name + ': 0 tasks'
+
+    #auth_params['name'] = name + ': 0 tasks'
+    auth_params['name'] = name
     response = requests.request(
        "POST",
        url,
@@ -81,12 +84,11 @@ def move(name, column_name):
             print('Название колонки: ' + v['task_column_name'] + ' |__| Название задачи: ' + name + ' |__| id: ' + k)
         task_id = input()
     elif len(task_dict.keys()) == 1:
-        task_id = task_dict.keys()[0]
+        task_id = list(task_dict.keys())[0]
     else:
         return 'Данного названия задачи не сущесвует.'
-
     for column in column_data:
-        if column['name'] == column_name:
+        if column['name'] == column_name[0]:
             # И выполним запрос к API для перемещения задачи в нужную колонку
             requests.put(base_url.format('cards') + '/' + task_id + '/idList',
                          data={'value': column['id'], **auth_params})
