@@ -20,7 +20,9 @@ def read():
 
     # Теперь выведем название каждой колонки и всех заданий, которые к ней относятся:
     for column in column_data:
-        print(column['name'])
+        task_data = requests.get(base_url.format('lists') + '/' + column['id'] + '/cards', params=auth_params).json()
+        print(column['name'] + "||##|| количество задач - " + str(len(task_data)))
+
         # Получим данные всех задач в колонке и перечислим все названия
         task_data = requests.get(base_url.format('lists') + '/' + column['id'] + '/cards', params=auth_params).json()
         if not task_data:
