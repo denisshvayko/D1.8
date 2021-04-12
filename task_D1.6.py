@@ -91,27 +91,12 @@ def move(name, column_name):
             break
 
 
-# if __name__ == "__main__":
-#     if len(sys.argv) < 2 or sys.argv[1] == 'read':
-#         read()
-#     elif sys.argv[1] == 'create_task':
-#         create_task(sys.argv[2], sys.argv[3])
-#     elif sys.argv[1] == 'create_column':
-#         create_column(sys.argv[2])
-#     elif sys.argv[1] == 'move':
-#         move(sys.argv[2], sys.argv[3:])
-
 if __name__ == "__main__":
-    if sys.argv[1] == 'read':
+    if len(sys.argv) < 2 or sys.argv[1] == 'read':
         read()
     elif sys.argv[1] == 'create_task':
-        name = input()
-        column_name = input()
-        create_task(name, column_name)
+        create_task(sys.argv[2], sys.argv[3])
     elif sys.argv[1] == 'create_column':
-        column_name = input()
-        create_column(column_name)
+        create_column(sys.argv[2])
     elif sys.argv[1] == 'move':
-        name = input()
-        column_name = input()
-        move(name, column_name)
+        move(sys.argv[2], sys.argv[3:])
