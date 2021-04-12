@@ -32,35 +32,25 @@ def read():
             print('\t' + "Название задачи: " + task['name'] + "--  ID задачи: " + task['id'] )
 
 
-def create_task(name, column_name):
-    # Получим данные всех колонок на доске
+def column_check(column_name):
+    column_id = None
     column_data = requests.get(base_url.format('boards') + '/' + board_id + '/lists', params=auth_params).json()
-
-    # Переберём данные обо всех колонках, пока не найдём ту колонку, которая нам нужна
     for column in column_data:
-        if ':' in column['name']:
-            column_name_from_API = column['name'].split(':')[0]
-        else:
-            column_name_from_API = column['name']
-        if column_name_from_API == column_name:
-            # Создадим задачу с именем _name_ в найденной колонке
-            requests.post(base_url.format('cards'), data={'name': name, 'idList': column['id'], **auth_params})
-            ## Потом доделаю эту штуку =с
-            # task_data = requests.get(base_url.format('lists') + '/' + column['id'] + '/cards', params=auth_params).json()
-            # auth_params['name'] = column_name_from_API + ': ' + str(len(task_data)) + ' tasks'
-            # requests.put('https://api.trello.com/1/lists/{}'.format(column['id']), params = auth_params)
-            break
+        if column['name'] == column_name:
+            column_id = column['id']
+            return column_id
+    return column_id
+
+def create_task(name, column_name):
+    column_id = column_check(column_name)
+    if column_id is None:
+        column_id = create_column(column_name)['id']
+    requests.post(base_url.format('cards'), data={'name': name, 'idList': column_id, **auth_params})
+
 
 def create_column(name):
-    url = "https://api.trello.com/1/boards/{}/lists".format(board_id)
-
-    #auth_params['name'] = name + ': 0 tasks'
-    auth_params['name'] = name
-    response = requests.request(
-       "POST",
-       url,
-       params=auth_params
-    )
+    return requests.post(base_url.format('boards') + '/' + board_id + '/lists',
+                         data={'name': name, 'idBoard': board_id, **auth_params}).json()
 
 
 
